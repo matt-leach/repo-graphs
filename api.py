@@ -1,4 +1,5 @@
 import requests
+import secret
 
 
 GITHUB_API = 'https://api.github.com'
@@ -12,14 +13,25 @@ class Commit(object):
         self.net_loc = sum(f['additions'] - f['deletions'] for f in data['files'])
 
 
+class GithubAPI(object):
+    access_token = secret.TOKEN
+    base_url = 'https://api.github.com'
+
+    @classmethod
+    def get(self, url):
+        r = requests.get(self.base_url + url + '?access_token={}'.format(self.access_token))
+        return r
+
+
 def get_commit_shas(username, repo):
-    r = requests.get(GITHUB_API + '/repos/{}/{}/commits'.format(username, repo))
+    r = GithubAPI.get('/repos/{}/{}/commits'.format(username, repo))
     commits = r.json()
+    print commits
     return [c['sha'] for c in commits]
 
 
 def get_commit(username, repo, sha):
-    r = requests.get(GITHUB_API + '/repos/{}/{}/commits/{}'.format(username, repo, sha))
+    r = GithubAPI.get('/repos/{}/{}/commits/{}'.format(username, repo, sha))
     commit = r.json()
     return commit
 
