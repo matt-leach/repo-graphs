@@ -15,11 +15,11 @@ class Commit(object):
         exts = {}
         for f in files:
             net_loc = f['additions'] - f['deletions']
-            ext = f['filename'].split('.')[-1]
+            ext = f['filename'].split('.')[-1]  # TODO: This thinks 'license' is an extension
             if ext in exts.keys():
-                exts[ext] = net_loc
-            else:
                 exts[ext] += net_loc
+            else:
+                exts[ext] = net_loc
 
         self.loc = exts
 
@@ -37,7 +37,6 @@ class GithubAPI(object):
 def get_commit_shas(username, repo):
     r = GithubAPI.get('/repos/{}/{}/commits'.format(username, repo))
     commits = r.json()
-    print commits
     return [c['sha'] for c in commits]
 
 
