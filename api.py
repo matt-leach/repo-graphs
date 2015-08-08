@@ -10,7 +10,18 @@ class Commit(object):
     def __init__(self, data):
         # data is the json from accessing the github api
         self.date = data['commit']['author']['date']
-        self.net_loc = sum(f['additions'] - f['deletions'] for f in data['files'])
+
+        files = data['files']
+        exts = {}
+        for f in files:
+            net_loc = f['additions'] - f['deletions']
+            ext = f['filename'].split('.')[-1]
+            if ext in exts.keys():
+                exts[ext] = net_loc
+            else:
+                exts[ext] += net_loc
+
+        self.loc = exts
 
 
 class GithubAPI(object):
