@@ -1,5 +1,6 @@
 from api import get_commit_shas, get_commit, Commit
 from matplotlib import pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 from collections import Counter
 
@@ -35,11 +36,16 @@ def plot(username, repo):
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
 
+    legend_patches = []
     for val, ext in enumerate(ys.keys()):
+        color = COLORS[val % len(COLORS)]
         if val == 0:
-            ax1.fill_between(x, 0, y_stack[0, :], facecolor=COLORS[val % len(COLORS)])
-        ax1.fill_between(x, y_stack[val-1, :], y_stack[val, :], facecolor=COLORS[val % len(COLORS)])
-        # TODO: legend
+            ax1.fill_between(x, 0, y_stack[0, :], facecolor=color)
+        ax1.fill_between(x, y_stack[val-1, :], y_stack[val, :], facecolor=color)
+
+        legend_patches.append(mpatches.Patch(color=color, label=ext))
+
+    plt.legend(handles=legend_patches)
 
     plt.show()
 
