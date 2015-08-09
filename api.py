@@ -1,5 +1,6 @@
 import requests
 import secret
+import os
 
 
 GITHUB_API = 'https://api.github.com'
@@ -15,7 +16,7 @@ class Commit(object):
         exts = {}
         for f in files:
             net_loc = f['additions'] - f['deletions']
-            ext = f['filename'].split('.')[-1]  # TODO: This thinks 'license' is an extension
+            ext = os.path.splitext(f['filename'])[1]
             if ext in exts.keys():
                 exts[ext] += net_loc
             else:
@@ -30,7 +31,7 @@ class GithubAPI(object):
 
     @classmethod
     def get(self, url):
-        r = requests.get(self.base_url + url + '?access_token={}'.format(self.access_token))
+        r = requests.get(self.base_url + url + '?access_token={}&per_page=100'.format(self.access_token))
         return r
 
 
