@@ -32,3 +32,8 @@ def plot(username, repo):
     ax1.fill_between(x, y_stack[0, :], y_stack[1, :], facecolor='#12efef')
 
     plt.show()
+
+
+if __name__ == '__main__':
+    import sys
+    plot(sys.argv[1], sys.argv[2])
