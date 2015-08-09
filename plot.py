@@ -8,7 +8,7 @@ from collections import Counter
 COLORS = ['#727272', '#f1595f', '#79c36a', '#599ad3', '#f9a65a', '#9e66ab', '#cd7058', '#d77fb3']
 
 
-def plot(username, repo):
+def get_points(username, repo):
     commits = get_commit_shas(username, repo)
     loc_count = Counter()
     ys = {}
@@ -29,6 +29,12 @@ def plot(username, repo):
         # For each extension we've seen append the current value to ys
         for ext, val in loc_count.items():
             ys[ext].append(val)
+
+    return x, ys
+
+
+def plot(username, repo):
+    x, ys = get_points(username, repo)
 
     # stack ys appropriately
     y = np.row_stack(ys.values())
